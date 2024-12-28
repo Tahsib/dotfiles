@@ -24,3 +24,4 @@
   "toggleterm.nvim": { "branch": "main", "commit": "022ff5594acccc8d90d2e46dc43994f7722ebdf7" },
   "vim-go": { "branch": "master", "commit": "6adc82bfef7f9a4b0db78065ae51b8ebb145c355" }
 }
+
