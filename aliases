@@ -5,6 +5,10 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 
+# Go Paths
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+
 # Shortcuts
 alias v="nvim"
 alias vi="nvim"
