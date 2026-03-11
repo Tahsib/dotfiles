@@ -9,7 +9,7 @@ return {
 		"williamboman/mason-lspconfig.nvim",
 		config = function()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "gopls", "golangci_lint_ls", "html", "tsserver", "pylsp", "terraformls", "yamlls" },
+				ensure_installed = { "lua_ls", "gopls", "golangci_lint_ls", "html", "ts_ls", "pylsp", "terraformls", "yamlls" },
 			})
 		end,
 	},
@@ -40,9 +40,6 @@ return {
 			lspconfig.html.setup({
 				capabilities = capabilities,
 			})
-			lspconfig.tsserver.setup({
-				capabilities = capabilities,
-			})
 			lspconfig.pylsp.setup({
 				capabilities = capabilities,
 			})
@@ -53,10 +50,14 @@ return {
 				capabilities = capabilities,
 			})
 
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-			vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-			vim.keymap.set("n", "gr", vim.lsp.buf.references, {})
-			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
+			vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show Hover Docs" })
+			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+			vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Go to References" })
+			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Actions" })
+			vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+			vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show Line Diagnostics" })
+			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
+			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
 		end,
 	},
 }
