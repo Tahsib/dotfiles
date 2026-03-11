@@ -1,0 +1,29 @@
+# Universal SRE Aliases (Works in Bash & Zsh)
+
+# Navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+# Shortcuts
+alias v="nvim"
+alias vi="nvim"
+alias vim="nvim"
+alias k="kubectl"
+alias d="docker"
+alias lg="lazygit"
+alias ld="lazydocker"
+
+# Git
+alias gst="git status"
+alias gp="git push"
+alias gl="git pull"
+alias gco="git checkout"
+
+# Ubuntu/Mac compatibility for 'ls'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias ls="ls -G"
+else
+  alias ls="ls --color=auto"
+fi
+alias ll="ls -lah"
