@@ -66,14 +66,27 @@ fc-cache -fv
 ```
 
 ### 2. Setup Symlinks
-Clone this repo to your desired location (e.g., `~/dotfiles`) and run:
+Clone this repo to your desired location (e.g., `~/dotfiles`) and run the included `Makefile` to securely back up any existing files (with timestamps) and create symlinks.
 
 ```bash
 # Navigate to repo
 cd ~/dotfiles
 
-# Use Makefile to automate symlinking
+# See all available options
+make help
+
+# Use Makefile to automate symlinking for all configurations
 make all
+
+# Or install individual configurations
+make nvim
+make tmux
+make ghostty
+make kitty
+make aliases
+
+# Safely remove all symlinks created by this Makefile
+make clean
 ```
 
 ### 3. Initialize Plugins
