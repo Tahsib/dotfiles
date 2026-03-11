@@ -1,6 +1,6 @@
 # 🚀 Professional SRE Dotfiles
 
-A high-performance, keyboard-centric development and infrastructure management environment optimized for **macOS** (Ghostty/Zsh) and **Ubuntu** (Bash).
+A high-performance, keyboard-centric development and infrastructure management environment optimized for **macOS** (Zsh) and **Ubuntu** (Bash).
 
 ---
 
@@ -18,12 +18,11 @@ A high-performance, keyboard-centric development and infrastructure management e
 - **Theme:** Catppuccin Mocha.
 - **Prefix:** `Ctrl + Space` (SRE-optimized for speed).
 - **Plugins:** TPM (Plugin Manager), Tmux-Yank, Vim-Tmux-Navigator.
-- **Status Bar:** Professional top-bar layout with session and directory info.
 
-### 🐈 Ghostty (Modern Terminal)
-- **Speed:** Built with Zig for zero-latency input.
-- **Aesthetic:** Catppuccin Mocha theme with native macOS background blur.
-- **UX:** Borderless, clean look with a draggable top-edge zone.
+### 🖥 Supported Terminals (GPU Accelerated)
+- **Ghostty:** (Primary) Built with Zig, native macOS feel, extreme performance.
+- **Kitty:** (Alternative) Highly extensible, cross-platform, robust protocol support.
+- **Both:** Pre-configured with Catppuccin Mocha and JetBrains Mono Nerd Font.
 
 ---
 
@@ -34,7 +33,11 @@ A high-performance, keyboard-centric development and infrastructure management e
 #### macOS
 ```bash
 # Core Tools
-brew install nvim tmux ghostty ripgrep fd fzf luarocks
+brew install nvim tmux ripgrep fd fzf luarocks
+
+# Choose your Terminal (or both)
+brew install ghostty
+brew install kitty
 
 # Language Bridges & Support
 luarocks install jsregexp
@@ -69,11 +72,15 @@ Clone this repo to `~/dotfiles` and run:
 # Create config directory
 mkdir -p ~/.config
 
-# Symlink everything
+# Symlink core configs
 ln -s ~/dotfiles/nvim ~/.config/nvim
-ln -s ~/dotfiles/ghostty ~/.config/ghostty
 ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/dotfiles/.gitconfig ~/.gitconfig
+
+# Symlink your preferred terminal
+ln -s ~/dotfiles/ghostty ~/.config/ghostty  # For Ghostty
+# OR
+ln -s ~/dotfiles/kitty ~/.config/kitty      # For Kitty
 ```
 
 ### 3. Initialize Plugins
@@ -109,9 +116,7 @@ To enable shared aliases and Go paths across Zsh and Bash, add this to your `~/.
 | **File Edit** | `-` | Edit directory with Oil.nvim |
 | **Terminal** | `<Leader>t` | Toggle bottom terminal |
 | **LSP** | `gd` / `K` | Go to Definition / Hover Docs |
-| **Rename** | `<Leader>rn` | Rename symbol project-wide |
 | **Format** | `<Leader>gf` | Manual format file |
-| **Comment** | `gcc` | Comment out current line |
 
 ---
 
