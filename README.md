@@ -66,21 +66,14 @@ fc-cache -fv
 ```
 
 ### 2. Setup Symlinks
-Clone this repo to `~/dotfiles` and run:
+Clone this repo to your desired location (e.g., `~/dotfiles`) and run:
 
 ```bash
-# Create config directory
-mkdir -p ~/.config
+# Navigate to repo
+cd ~/dotfiles
 
-# Symlink core configs
-ln -s ~/dotfiles/nvim ~/.config/nvim
-ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
-ln -s ~/dotfiles/.gitconfig ~/.gitconfig
-
-# Symlink your preferred terminal
-ln -s ~/dotfiles/ghostty ~/.config/ghostty  # For Ghostty
-# OR
-ln -s ~/dotfiles/kitty ~/.config/kitty      # For Kitty
+# Use Makefile to automate symlinking
+make all
 ```
 
 ### 3. Initialize Plugins
@@ -100,7 +93,7 @@ Launch `nvim`. Lazy.nvim and Mason will automatically install all plugins and LS
 To enable shared aliases and Go paths across Zsh and Bash, add this to your `~/.zshrc` (Mac) or `~/.bashrc` (Ubuntu):
 
 ```bash
-[ -f ~/dotfiles/aliases ] && source ~/dotfiles/aliases
+[ -f ~/.aliases ] && source ~/.aliases
 ```
 
 ---
@@ -121,4 +114,4 @@ To enable shared aliases and Go paths across Zsh and Bash, add this to your `~/.
 ---
 
 ## 📝 License
-Built with ☕ and 🧠 by [YOUR_NAME](https://github.com/YOUR_NAME).
+MIT License. Feel free to use and modify!
