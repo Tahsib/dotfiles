@@ -23,76 +23,69 @@ A high-performance, keyboard-centric development and infrastructure management e
 ### 🐈 Ghostty (Modern Terminal)
 - **Speed:** Built with Zig for zero-latency input.
 - **Aesthetic:** Catppuccin Mocha theme with native macOS background blur.
-- **UX:** Borderless, draggable look with Cmd+Ctrl+Drag support.
+- **UX:** Borderless, clean look with a draggable top-edge zone.
 
 ---
 
 ## 📦 Installation
 
-### 1. Prerequisites (macOS)
+### 1. Install System Dependencies
+
+#### macOS
 ```bash
 # Core Tools
-brew install nvim tmux ghostty ripgrep fd fzf
+brew install nvim tmux ghostty ripgrep fd fzf luarocks
 
 # Language Bridges & Support
-brew install luarocks jsregexp
+luarocks install jsregexp
 npm install -g neovim
 pip install pynvim
+
+# Font (Critical for icons)
+brew tap homebrew/cask-fonts
+brew install --cask font-jetbrains-mono-nerd-font
 ```
 
-### 1. Prerequisites (Ubuntu)
+#### Ubuntu
 ```bash
 # Core Tools
-sudo apt update && sudo apt install neovim tmux xclip ripgrep fd-find unzip -y
+sudo apt update && sudo apt install neovim tmux xclip ripgrep fd-find unzip luarocks -y
 
 # Language Support
-sudo apt install npm python3-pip -y
 npm install -g neovim
 pip install pynvim
+
+# Font (JetBrains Mono Nerd Font)
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts && curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
+unzip JetBrainsMono.zip && rm JetBrainsMono.zip
+fc-cache -fv
 ```
 
 ### 2. Setup Symlinks
-```bash
-# Backup existing configs
-mv ~/.config/nvim ~/.config/nvim.bak
-mv ~/.tmux.conf ~/.tmux.conf.bak
-mv ~/.config/ghostty ~/.config/ghostty.bak
+Clone this repo to `~/dotfiles` and run:
 
-# Create new symlinks
+```bash
+# Create config directory
+mkdir -p ~/.config
+
+# Symlink everything
 ln -s ~/dotfiles/nvim ~/.config/nvim
 ln -s ~/dotfiles/ghostty ~/.config/ghostty
 ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/dotfiles/.gitconfig ~/.gitconfig
 ```
 
-### 3. Install Plugins
+### 3. Initialize Plugins
 **Tmux (TPM):**
 ```bash
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 tmux source ~/.tmux.conf
-# Inside tmux: Press Ctrl+Space then I (capital i) to install
+# Inside tmux: Press 'Prefix' (Ctrl+Space) then 'I' (capital i) to install
 ```
 
 **Neovim:**
 Launch `nvim`. Lazy.nvim and Mason will automatically install all plugins and LSPs.
-
----
-
-## ⌨️ Common Shortcuts (Muscle Memory)
-
-| Category | Keybinding | Action |
-| :--- | :--- | :--- |
-| **Leader** | `Space` | The "Leader" key for all shortcuts |
-| **Navigation** | `Ctrl + h/j/k/l` | Seamlessly move between all panes |
-| **Finder** | `<Leader>ff` | Find Files (Telescope) |
-| **Grep** | `<Leader>fg` | Live Grep search |
-| **Explorer** | `<Leader>e` | Toggle Neo-tree sidebar |
-| **File Edit** | `-` | Edit directory with Oil.nvim |
-| **Terminal** | `<Leader>t` | Toggle bottom terminal |
-| **LSP** | `gd` / `K` | Go to Definition / Hover Docs |
-| **Rename** | `<Leader>rn` | Rename symbol project-wide |
-| **Format** | `<Leader>gf` | Manual format file |
-| **Comment** | `gcc` | Comment out current line |
 
 ---
 
@@ -102,6 +95,23 @@ To enable shared aliases and Go paths across Zsh and Bash, add this to your `~/.
 ```bash
 [ -f ~/dotfiles/aliases ] && source ~/dotfiles/aliases
 ```
+
+---
+
+## ⌨️ Essential Shortcuts
+
+| Category | Keybinding | Action |
+| :--- | :--- | :--- |
+| **Leader** | `Space` | The "Leader" key for all shortcuts |
+| **Navigation** | `Ctrl + h/j/k/l` | Move between ALL panes (Vim & Tmux) |
+| **Finder** | `<Leader>ff` | Find Files (Telescope) |
+| **Explorer** | `<Leader>e` | Toggle Neo-tree sidebar |
+| **File Edit** | `-` | Edit directory with Oil.nvim |
+| **Terminal** | `<Leader>t` | Toggle bottom terminal |
+| **LSP** | `gd` / `K` | Go to Definition / Hover Docs |
+| **Rename** | `<Leader>rn` | Rename symbol project-wide |
+| **Format** | `<Leader>gf` | Manual format file |
+| **Comment** | `gcc` | Comment out current line |
 
 ---
 
