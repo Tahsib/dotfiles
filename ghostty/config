@@ -1,0 +1,43 @@
+# Pro SRE Ghostty Configuration
+
+# Font
+font-family = "JetBrainsMono Nerd Font"
+font-size = 12
+font-thicken = true
+
+# Theme (Catppuccin Mocha is built-in)
+theme = "Catppuccin Mocha"
+
+# Window Appearance
+window-decoration = titlebar-only
+window-padding-x = 10
+window-padding-y = 10
+background-opacity = 0.95
+background-blur-radius = 20
+
+# Cursor
+cursor-style = block
+cursor-style-blink = true
+cursor-click-to-move = true
+
+# Mouse
+mouse-hide-while-typing = true
+
+# Performance
+# Ghostty is already extremely fast, but we'll ensure smooth rendering
+command-acceleration = true
+
+# OS Tweaks (macOS)
+macos-option-as-alt = left
+macos-command-key-as-alt = false
+
+# Terminal Features
+shell-integration = zsh
+# Enable copy-on-select like a pro
+copy-on-select = true
+
+# Keybindings
+# Standard movement is handled by Neovim/Tmux, 
+# but we can add Ghostty-specific shortcuts if needed.
+# Example: Command+Enter for new window
+keybind = cmd+enter=new_window
