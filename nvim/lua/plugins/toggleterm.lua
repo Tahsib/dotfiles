@@ -16,22 +16,5 @@ return {
     }
   -- Keybinding to open toggleterm with leader
   vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', { desc = "Toggle Terminal", noremap = true, silent = true })
-
-  -- Keybinding to jump from toggleterm to file buffer or vice versa
-  vim.keymap.set('n', '<C-b>', function()
-      -- Check if we're in a terminal window
-      local term_win = vim.fn.bufwinid("toggleterm")
-      if term_win ~= -1 then
-        -- If in terminal, switch to the previous window (file buffer)
-        vim.cmd("wincmd p")
-      else
-        -- If not in terminal, open toggleterm and go to terminal mode
-        vim.cmd("ToggleTerm")
-        vim.cmd("startinsert")
-      end
-    end, { noremap = true, silent = true })
-
-  -- Keybinding to exit terminal mode and jump to file window
-  vim.keymap.set('t', '<C-b>', [[<C-\><C-n><C-w>p]], { noremap = true, silent = true })
   end,
 }
