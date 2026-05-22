@@ -1,49 +1,61 @@
-# Makefile for dotfiles
+# dotfiles - automated configuration deployment
 
-# Use $(CURDIR) for absolute paths, which is more reliable in Make than $(PWD)
+SHELL        := /bin/bash
 DOTFILES_DIR := $(CURDIR)
 CONFIG_DIR   := $(HOME)/.config
+BACKUP_DIR   := $(HOME)/.dotfiles_backup/$(shell date +%Y%m%d_%H%M%S)
 
-.PHONY: all nvim tmux ghostty kitty aliases clean help
+.PHONY: all nvim tmux ghostty kitty aliases verify clean help
 
 all: nvim tmux ghostty kitty aliases ## Install all configurations
 
-# Helper to safely symlink. 
-# 1. If it's a real directory/file (not a link), back it up with a timestamp to avoid overwriting previous backups
-# 2. Use ln -sfn: 
-#    -s: symbolic
-#    -f: force (overwrite existing symlinks)
-#    -n: treat symlink to directory as a file (crucial for macOS/BSD to prevent nesting)
+# Centralized backup and symlink logic
+# 1. Check if the target is a real file/dir (not a symlink)
+# 2. If it is, move it to a timestamped central backup directory
+# 3. Create/overwrite the symlink
 define safe_link
 	@if [ -e "$(2)" ] && [ ! -L "$(2)" ]; then \
-		BACKUP="$(2).backup_$$(date +%Y%m%d_%H%M%S)"; \
-		echo "Backing up existing $(2) to $$BACKUP"; \
-		mv "$(2)" "$$BACKUP"; \
+		mkdir -p "$(BACKUP_DIR)"; \
+		echo "Backing up $(2) to $(BACKUP_DIR)"; \
+		mv "$(2)" "$(BACKUP_DIR)/"; \
 	fi
-	ln -sfn "$(1)" "$(2)"
+	@mkdir -p "$$(dirname "$(2)")"
+	@ln -sfn "$(1)" "$(2)"
 endef
 
-nvim: ## Symlink Neovim config directory
-	@mkdir -p "$(CONFIG_DIR)"
+nvim: ## Link Neovim configuration
 	$(call safe_link,$(DOTFILES_DIR)/nvim,$(CONFIG_DIR)/nvim)
 
-tmux: ## Symlink tmux config
+tmux: ## Link tmux configuration
 	$(call safe_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 
-ghostty: ## Symlink Ghostty config directory
-	@mkdir -p "$(CONFIG_DIR)"
+ghostty: ## Link Ghostty configuration
 	$(call safe_link,$(DOTFILES_DIR)/ghostty,$(CONFIG_DIR)/ghostty)
 
-kitty: ## Symlink Kitty config directory
-	@mkdir -p "$(CONFIG_DIR)"
+kitty: ## Link Kitty configuration
 	$(call safe_link,$(DOTFILES_DIR)/kitty,$(CONFIG_DIR)/kitty)
 
-aliases: ## Symlink aliases file
+aliases: ## Link shell aliases
 	$(call safe_link,$(DOTFILES_DIR)/aliases,$(HOME)/.aliases)
-	@echo "Note: Ensure your shell config (~/.zshrc or ~/.bashrc) sources ~/.aliases"
-	@echo '      Add this: [ -f ~/.aliases ] && . ~/.aliases'
 
-clean: ## Remove only the symlinks created by this Makefile
+verify: ## Verify symlink integrity and path correctness
+	@echo "Verifying symlinks..."
+	@for f in "$(CONFIG_DIR)/nvim" "$(HOME)/.tmux.conf" "$(CONFIG_DIR)/ghostty" "$(CONFIG_DIR)/kitty" "$(HOME)/.aliases"; do \
+		if [ -L "$$f" ]; then \
+			TARGET=$$(readlink "$$f"); \
+			if [[ "$$TARGET" == "$(DOTFILES_DIR)"* ]]; then \
+				echo "✓ $$f -> $$TARGET"; \
+			else \
+				echo "✗ $$f points to a different location: $$TARGET"; \
+				exit 1; \
+			fi; \
+		else \
+			echo "✗ $$f is missing or not a symlink"; \
+			exit 1; \
+		fi; \
+	done
+
+clean: ## Remove managed symlinks
 	@for f in "$(CONFIG_DIR)/nvim" "$(HOME)/.tmux.conf" "$(CONFIG_DIR)/ghostty" "$(CONFIG_DIR)/kitty" "$(HOME)/.aliases"; do \
 		if [ -L "$$f" ]; then \
 			echo "Removing symlink $$f"; \
@@ -51,5 +63,5 @@ clean: ## Remove only the symlinks created by this Makefile
 		fi; \
 	done
 
-help: ## Show this help message
+help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
