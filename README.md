@@ -41,7 +41,7 @@ sudo apt update && sudo apt install neovim tmux xclip ripgrep fd-find unzip luar
 Uses a `Makefile` to handle symlinking and timestamped backups of existing configs.
 
 ```bash
-git clone <repository_url> ~/dotfiles
+git clone https://github.com/Tahsib/dotfiles ~/dotfiles
 cd ~/dotfiles
 make all
 ```

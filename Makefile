@@ -5,6 +5,14 @@ DOTFILES_DIR := $(CURDIR)
 CONFIG_DIR   := $(HOME)/.config
 BACKUP_DIR   := $(HOME)/.dotfiles_backup/$(shell date +%Y%m%d_%H%M%S)
 
+# List of files/directories to symlink
+MANAGED_FILES := \
+	"$(CONFIG_DIR)/nvim" \
+	"$(HOME)/.tmux.conf" \
+	"$(CONFIG_DIR)/ghostty" \
+	"$(CONFIG_DIR)/kitty" \
+	"$(HOME)/.aliases"
+
 .PHONY: all nvim tmux ghostty kitty aliases verify clean help
 
 all: nvim tmux ghostty kitty aliases ## Install all configurations
@@ -40,7 +48,7 @@ aliases: ## Link shell aliases
 
 verify: ## Verify symlink integrity and path correctness
 	@echo "Verifying symlinks..."
-	@for f in "$(CONFIG_DIR)/nvim" "$(HOME)/.tmux.conf" "$(CONFIG_DIR)/ghostty" "$(CONFIG_DIR)/kitty" "$(HOME)/.aliases"; do \
+	@for f in $(MANAGED_FILES); do \
 		if [ -L "$$f" ]; then \
 			TARGET=$$(readlink "$$f"); \
 			if [[ "$$TARGET" == "$(DOTFILES_DIR)"* ]]; then \
@@ -56,7 +64,7 @@ verify: ## Verify symlink integrity and path correctness
 	done
 
 clean: ## Remove managed symlinks
-	@for f in "$(CONFIG_DIR)/nvim" "$(HOME)/.tmux.conf" "$(CONFIG_DIR)/ghostty" "$(CONFIG_DIR)/kitty" "$(HOME)/.aliases"; do \
+	@for f in $(MANAGED_FILES); do \
 		if [ -L "$$f" ]; then \
 			echo "Removing symlink $$f"; \
 			rm "$$f"; \
