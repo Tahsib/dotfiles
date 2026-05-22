@@ -9,7 +9,7 @@ font-size = 12
 theme = Catppuccin Mocha
 
 # --- BORDERLESS BUT DRAGGABLE ---
-# Use true + hidden instead of false. 
+# Use true + hidden instead of false.
 # This looks borderless but lets you drag from the top 15-20 pixels.
 window-decoration = true
 macos-titlebar-style = hidden

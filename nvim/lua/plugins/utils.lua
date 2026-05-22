@@ -1,7 +1,7 @@
 return {
   -- "gcc" to comment out a line
   {
-    'numToStr/Comment.nvim',
+    "numToStr/Comment.nvim",
     opts = {},
     lazy = false,
   },
@@ -13,8 +13,8 @@ return {
   },
   -- Auto-close brackets, quotes, etc.
   {
-    'windwp/nvim-autopairs',
+    "windwp/nvim-autopairs",
     event = "InsertEnter",
-    opts = {}
-  }
+    opts = {},
+  },
 }
