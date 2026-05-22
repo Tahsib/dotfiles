@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Universal SRE Aliases (Works in Bash & Zsh)
 
 # Navigation
