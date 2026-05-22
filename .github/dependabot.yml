@@ -11,3 +11,15 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      pre-commit-hooks:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "pre-commit"
