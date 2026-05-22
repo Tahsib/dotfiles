@@ -17,5 +17,6 @@ undo/
 .cache/
 .pre-commit-config.yaml.bak
 
-# Backups (centralized by Makefile)
+# Backups
+*.bak
 .dotfiles_backup/
