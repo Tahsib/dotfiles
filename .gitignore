@@ -19,4 +19,6 @@ undo/
 
 # Backups
 *.bak
+*.local
+.zshrc.local
 .dotfiles_backup/

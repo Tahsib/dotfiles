@@ -1,0 +1,118 @@
+# starship.toml
+
+format = """
+[ $directory ](bg:surface1 fg:sky)\
+[](fg:surface1 bg:maroon)\
+$git_branch\
+$git_status\
+[](fg:maroon bg:mauve)\
+$terraform\
+[](fg:mauve bg:blue)\
+$kubernetes\
+[](fg:blue bg:docker_blue)\
+${custom.docker}\
+[](fg:docker_blue bg:peach)\
+$aws\
+[](fg:peach bg:teal)\
+$gcloud\
+[](fg:teal bg:surface1)\
+[  $time ](bg:surface1 fg:subtext1)\
+[ ](fg:surface1)
+$character"""
+
+palette = "catppuccin_mocha"
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+docker_blue = "#2496ed"
+
+[directory]
+style = "bg:surface1 fg:sky"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = " "
+style = "bg:maroon fg:base"
+format = "[[ $symbol $branch ]($style)]($style)"
+
+[git_status]
+style = "bg:maroon fg:base"
+format = '[[($all_status$ahead_behind )]($style)]($style)'
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+up_to_date = "✔"
+modified = "!"
+staged = "+"
+untracked = "?"
+deleted = "✘"
+renamed = "»"
+stashed = '\$'
+
+[terraform]
+symbol = "󱁢 "
+style = "bg:mauve fg:base"
+format = "[[ $symbol$workspace ]($style)]($style)"
+
+[kubernetes]
+symbol = "󱃾 "
+disabled = false
+style = "bg:blue fg:base"
+format = '[[ $symbol$context(\($namespace\)) ]($style)]($style)'
+
+[custom.docker]
+description = "Docker context"
+files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml"]
+style = "bg:docker_blue fg:base"
+format = "[   ]($style)"
+
+[docker_context]
+disabled = true
+
+[aws]
+symbol = "󰸏 "
+style = "bg:peach fg:base"
+format = "[[ $symbol $profile ]($style)]($style)"
+
+[gcloud]
+symbol = "󱇶 "
+style = "bg:teal fg:base"
+format = "[[ $symbol $project ]($style)]($style)"
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:surface1 fg:subtext1"
+format = "[ $time ]($style)"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vicmd_symbol = "[❮](bold blue)"
