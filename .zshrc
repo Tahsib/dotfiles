@@ -17,8 +17,11 @@ else
 fi
 
 # Environment
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
-export TERMINAL="kitty"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  [ -d "/opt/homebrew/bin" ] && export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+fi
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export TERMINAL="ghostty"
 export EDITOR="nvim"
 
 # History
@@ -69,7 +72,11 @@ fi
 
 # FZF
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
-export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+if (( $+commands[fdfind] )); then
+  export FZF_DEFAULT_COMMAND='fdfind --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+elif (( $+commands[fd] )); then
+  export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+fi
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Initialization
