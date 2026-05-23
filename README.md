@@ -4,12 +4,19 @@ Development environment configurations for macOS and Linux.
 
 ## Requirements
 
-- **Neovim**: v0.11.x (Pinned via `lazy-lock.json`)
+- **Neovim**: v0.12.2 (Verified)
 - **Tmux**: 3.2+
 - **Terminal**: Ghostty or Kitty
+- **Shell**: Zsh or Bash
 - **Font**: JetBrains Mono Nerd Font
 
 ## Technical Stack
+
+### Shell
+- **Prompt**: Starship
+- **Navigation**: Zoxide (`z`), FZF (`Ctrl+R`, `Ctrl+T`)
+- **Plugins**: Zsh-autosuggestions, Zsh-syntax-highlighting
+- **History**: 50k lines, timestamped, cross-tab sharing
 
 ### Neovim
 - **Plugin Manager**: `lazy.nvim`
@@ -21,25 +28,11 @@ Development environment configurations for macOS and Linux.
 - **Prefix**: `C-b`
 - **Theme**: Catppuccin Mocha
 - **Navigation**: `vim-tmux-navigator`
- for pane navigation
 
 ## Installation
 
-### 1. Dependencies
-
-**macOS:**
-```bash
-brew install nvim tmux ripgrep fd fzf luarocks ghostty
-brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono-nerd-font
-```
-
-**Ubuntu:**
-```bash
-sudo apt update && sudo apt install neovim tmux xclip ripgrep fd-find unzip luarocks -y
-```
-
-### 2. Deployment
-Uses a `Makefile` to handle symlinking and timestamped backups of existing configs.
+### 1. Provision and Deploy
+Runs OS detection, installs dependencies via `Brewfile` (macOS) or `apt` (Ubuntu), and establishes symlinks.
 
 ```bash
 git clone https://github.com/Tahsib/dotfiles ~/dotfiles
@@ -47,19 +40,23 @@ cd ~/dotfiles
 make all
 ```
 
-### 3. Initialization
+### 2. Manual Steps
 - **Tmux**: Install [TPM](https://github.com/tmux-plugins/tpm), then press `Prefix + I`.
-- **Neovim**: Launch `nvim`; `lazy.nvim` and `mason.nvim` will bootstrap the environment.
+- **Secrets**: Store sensitive environment variables in `~/.zshrc.local` (Git-ignored).
 
 ## Keybindings
 
 | Key | Action |
 | :--- | :--- |
-| `Space` | Leader |
-| `C-h/j/k/l` | Navigate splits/panes |
+| `Space` | Neovim Leader |
+| `C-b` | Tmux Prefix |
+| `z <dir>` | Zoxide jump |
+| `C-r` | FZF history search |
+| `C-t` | FZF file search |
+| `C-h/j/k/l` | Pane navigation |
 | `<Leader>ff` | Telescope find files |
 | `<Leader>e` | Neo-tree toggle |
-| `-` | Oil.nvim directory editor |
+| `-` | Oil.nvim editor |
 | `<Leader>t` | Toggle terminal |
 | `gd` | LSP definition |
 | `K` | LSP hover |

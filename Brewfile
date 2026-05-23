@@ -1,6 +1,7 @@
 # Brewfile
 
 brew "neovim"
+brew "tree-sitter"
 brew "tmux"
 brew "ripgrep"
 brew "fd"
