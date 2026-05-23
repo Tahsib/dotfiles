@@ -14,10 +14,13 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
-        with:
-          scandir: '.'
-          additional_files: 'aliases'
+        run: shellcheck aliases
+
+      - name: Check Zsh Syntax
+        run: zsh -n .zshrc
+
+      - name: Check Bash Syntax
+        run: bash -n .bashrc
 
       - name: Check StyLua
         uses: JohnnyMorganz/stylua-action@v5
