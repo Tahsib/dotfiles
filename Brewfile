@@ -1,0 +1,16 @@
+# Brewfile
+
+brew "neovim"
+brew "tmux"
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "luarocks"
+cask "ghostty"
+brew "starship"
+brew "zoxide"
+brew "bat"
+brew "btop"
+brew "eza"
+brew "jq"
+brew "yq"

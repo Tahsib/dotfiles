@@ -1,26 +1,38 @@
-# dotfiles - automated configuration deployment
+# Makefile
 
 SHELL        := /bin/bash
 DOTFILES_DIR := $(CURDIR)
 CONFIG_DIR   := $(HOME)/.config
 BACKUP_DIR   := $(HOME)/.dotfiles_backup/$(shell date +%Y%m%d_%H%M%S)
 
-# List of files/directories to symlink
 MANAGED_FILES := \
 	"$(CONFIG_DIR)/nvim" \
 	"$(HOME)/.tmux.conf" \
 	"$(CONFIG_DIR)/ghostty" \
 	"$(CONFIG_DIR)/kitty" \
-	"$(HOME)/.aliases"
+	"$(HOME)/.aliases" \
+	"$(HOME)/.zshrc" \
+	"$(CONFIG_DIR)/starship.toml"
 
-.PHONY: all nvim tmux ghostty kitty aliases verify clean help
+.PHONY: all deps nvim tmux ghostty kitty aliases zsh starship verify clean help
 
-all: nvim tmux ghostty kitty aliases ## Install all configurations
+all: deps nvim tmux ghostty kitty aliases zsh starship
 
-# Centralized backup and symlink logic
-# 1. Check if the target is a real file/dir (not a symlink)
-# 2. If it is, move it to a timestamped central backup directory
-# 3. Create/overwrite the symlink
+deps: ## Install system dependencies
+	@echo "Checking system dependencies..."
+	@if [[ "$$OSTYPE" == "darwin"* ]]; then \
+		if command -v brew >/dev/null; then \
+			echo "Installing macOS dependencies via Homebrew..."; \
+			brew bundle --file=$(DOTFILES_DIR)/Brewfile; \
+		else \
+			echo "✗ Homebrew not found. Please install it first: https://brew.sh"; \
+			exit 1; \
+		fi; \
+	elif [[ "$$OSTYPE" == "linux-gnu"* ]]; then \
+		echo "Installing Ubuntu/Linux dependencies..."; \
+		sudo apt update && sudo apt install -y nvim tmux xclip ripgrep fd-find unzip luarocks bat btop jq; \
+	fi
+
 define safe_link
 	@if [ -e "$(2)" ] && [ ! -L "$(2)" ]; then \
 		mkdir -p "$(BACKUP_DIR)"; \
@@ -31,22 +43,28 @@ define safe_link
 	@ln -sfn "$(1)" "$(2)"
 endef
 
-nvim: ## Link Neovim configuration
+nvim:
 	$(call safe_link,$(DOTFILES_DIR)/nvim,$(CONFIG_DIR)/nvim)
 
-tmux: ## Link tmux configuration
+tmux:
 	$(call safe_link,$(DOTFILES_DIR)/.tmux.conf,$(HOME)/.tmux.conf)
 
-ghostty: ## Link Ghostty configuration
+ghostty:
 	$(call safe_link,$(DOTFILES_DIR)/ghostty,$(CONFIG_DIR)/ghostty)
 
-kitty: ## Link Kitty configuration
+kitty:
 	$(call safe_link,$(DOTFILES_DIR)/kitty,$(CONFIG_DIR)/kitty)
 
-aliases: ## Link shell aliases
+aliases:
 	$(call safe_link,$(DOTFILES_DIR)/aliases,$(HOME)/.aliases)
 
-verify: ## Verify symlink integrity and path correctness
+zsh:
+	$(call safe_link,$(DOTFILES_DIR)/.zshrc,$(HOME)/.zshrc)
+
+starship:
+	$(call safe_link,$(DOTFILES_DIR)/starship.toml,$(CONFIG_DIR)/starship.toml)
+
+verify:
 	@echo "Verifying symlinks..."
 	@for f in $(MANAGED_FILES); do \
 		if [ -L "$$f" ]; then \
@@ -63,7 +81,7 @@ verify: ## Verify symlink integrity and path correctness
 		fi; \
 	done
 
-clean: ## Remove managed symlinks
+clean:
 	@for f in $(MANAGED_FILES); do \
 		if [ -L "$$f" ]; then \
 			echo "Removing symlink $$f"; \
@@ -71,5 +89,5 @@ clean: ## Remove managed symlinks
 		fi; \
 	done
 
-help: ## Show help
+help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'

@@ -20,7 +20,7 @@ Development environment configurations for macOS and Linux.
 ### Tmux
 - **Prefix**: `C-Space`
 - **Theme**: Catppuccin Mocha
-- **Navigation**: `vim-tmux-navigator` for seamless split/pane movement
+- **Navigation**: `vim-tmux-navigator` for pane navigation
 
 ## Installation
 
