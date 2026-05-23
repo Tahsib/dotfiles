@@ -31,7 +31,13 @@ deps: ## Install system dependencies
 	elif [[ "$$OSTYPE" == "linux-gnu"* ]]; then \
 		echo "Installing Ubuntu/Linux dependencies..."; \
 		sudo add-apt-repository -y ppa:neovim-ppa/stable && sudo apt update; \
-		sudo apt install -y neovim tmux xclip ripgrep fd-find unzip luarocks bat btop jq; \
+		sudo apt install -y neovim tmux xclip ripgrep fd-find unzip luarocks bat btop jq yq \
+			shellcheck black isort yamllint ansible-lint python3-pip; \
+	fi
+	@if command -v go >/dev/null; then \
+		echo "Installing Go tools..."; \
+		go install github.com/incu6us/goimports-reviser/v3@latest; \
+		go install github.com/segmentio/golines@latest; \
 	fi
 
 define safe_link
