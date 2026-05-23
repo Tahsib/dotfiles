@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Install Linting Tools
+        run: sudo apt update && sudo apt install -y zsh shellcheck
+
       - name: Run ShellCheck
         run: shellcheck aliases
 
