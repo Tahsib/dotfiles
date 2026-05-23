@@ -2,17 +2,19 @@
 
 export ZSH="$HOME/.oh-my-zsh"
 
-# Plugin bootstrap
-if [ ! -d "$ZSH/custom/plugins/zsh-autosuggestions" ]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH/custom/plugins/zsh-autosuggestions"
-fi
-
-if [ ! -d "$ZSH/custom/plugins/zsh-syntax-highlighting" ]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH/custom/plugins/zsh-syntax-highlighting"
-fi
-
+# Plugins
 plugins=(git docker kubectl zsh-autosuggestions zsh-syntax-highlighting)
-source "$ZSH/oh-my-zsh.sh"
+
+# Load Oh My Zsh safely and silently
+if [ -f "$ZSH/oh-my-zsh.sh" ]; then
+  # Standardize plugin loading - OmZ handles the $plugins array
+  source "$ZSH/oh-my-zsh.sh"
+else
+  # Minimal fallback if Oh My Zsh is missing (for basic functionality)
+  autoload -Uz compinit && compinit
+  # Basic aliases to keep moving
+  alias l='ls -lah'
+fi
 
 # Environment
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:$PATH"
@@ -45,10 +47,25 @@ export PATH="$PATH:$GOPATH/bin"
 fpath=("$HOME/.docker/completions" $fpath)
 autoload -Uz compinit && compinit
 
-# Tool Completions
-command -v kubectl &>/dev/null && source <(kubectl completion zsh)
-command -v helm &>/dev/null && source <(helm completion zsh)
-compdef k=kubectl
+# Lazy load completions for heavy tools
+if (( $+commands[kubectl] )); then
+  # Cache kubectl completion for speed
+  if [ ! -f "$HOME/.kube/completion.zsh" ]; then
+    mkdir -p "$HOME/.kube"
+    kubectl completion zsh > "$HOME/.kube/completion.zsh"
+  fi
+  source "$HOME/.kube/completion.zsh"
+  compdef k=kubectl
+fi
+
+if (( $+commands[helm] )); then
+  # Cache helm completion
+  if [ ! -f "$HOME/.helm/completion.zsh" ]; then
+    mkdir -p "$HOME/.helm"
+    helm completion zsh > "$HOME/.helm/completion.zsh"
+  fi
+  source "$HOME/.helm/completion.zsh"
+fi
 
 # FZF
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
@@ -56,8 +73,8 @@ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --e
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Initialization
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
-command -v starship &>/dev/null && eval "$(starship init zsh)"
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+(( $+commands[starship] )) && eval "$(starship init zsh)"
 
 # Overrides
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"

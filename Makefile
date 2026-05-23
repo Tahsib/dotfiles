@@ -14,9 +14,37 @@ MANAGED_FILES := \
 	"$(HOME)/.zshrc" \
 	"$(CONFIG_DIR)/starship.toml"
 
-.PHONY: all deps nvim tmux ghostty kitty aliases zsh starship verify clean help
+.PHONY: all deps nvim tmux ghostty kitty aliases zsh zsh-plugins starship verify doctor clean help
 
-all: deps nvim tmux ghostty kitty aliases zsh starship
+all: deps nvim tmux ghostty kitty aliases zsh zsh-plugins starship
+
+doctor: verify ## Check system health and dependencies
+	@echo "--- Checking Binaries ---"
+	@for bin in nvim tmux kitty starship zoxide fzf fd rg; do \
+		if command -v $$bin >/dev/null; then \
+			echo "✓ $$bin is installed"; \
+		else \
+			echo "✗ $$bin is MISSING"; \
+		fi; \
+	done
+	@echo "--- Checking ZSH Plugins ---"
+	@for plugin in zsh-autosuggestions zsh-syntax-highlighting; do \
+		if [ -d "$(HOME)/.oh-my-zsh/custom/plugins/$$plugin" ]; then \
+			echo "✓ $$plugin is installed"; \
+		else \
+			echo "✗ $$plugin is MISSING (run 'make zsh-plugins')"; \
+		fi; \
+	done
+
+zsh-plugins: ## Install ZSH plugins
+	@echo "Installing ZSH plugins..."
+	@mkdir -p "$(HOME)/.oh-my-zsh/custom/plugins"
+	@if [ ! -d "$(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then \
+		git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions"; \
+	fi
+	@if [ ! -d "$(HOME)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then \
+		git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "$(HOME)/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"; \
+	fi
 
 deps: ## Install system dependencies
 	@echo "Checking system dependencies..."
