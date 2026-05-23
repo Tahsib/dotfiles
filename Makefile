@@ -30,7 +30,8 @@ deps: ## Install system dependencies
 		fi; \
 	elif [[ "$$OSTYPE" == "linux-gnu"* ]]; then \
 		echo "Installing Ubuntu/Linux dependencies..."; \
-		sudo apt update && sudo apt install -y nvim tmux xclip ripgrep fd-find unzip luarocks bat btop jq; \
+		sudo add-apt-repository -y ppa:neovim-ppa/stable && sudo apt update; \
+		sudo apt install -y neovim tmux xclip ripgrep fd-find unzip luarocks bat btop jq; \
 	fi
 
 define safe_link

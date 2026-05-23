@@ -1,3 +1,4 @@
+# shellcheck shell=zsh
 # .zshrc
 
 # Oh My Zsh
