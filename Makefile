@@ -11,22 +11,35 @@ MANAGED_FILES := \
 	"$(CONFIG_DIR)/ghostty" \
 	"$(CONFIG_DIR)/kitty" \
 	"$(HOME)/.aliases" \
-	"$(HOME)/.zshrc" \
 	"$(CONFIG_DIR)/starship.toml"
 
-.PHONY: all deps nvim tmux ghostty kitty aliases zsh zsh-plugins starship verify doctor clean help
+# Conditional Shell Configuration
+ifeq ($(shell uname), Darwin)
+    SHELL_TARGET := zsh zsh-plugins
+    MANAGED_FILES += "$(HOME)/.zshrc"
+else
+    SHELL_TARGET := bash
+    MANAGED_FILES += "$(HOME)/.bashrc"
+endif
 
-all: deps nvim tmux ghostty kitty aliases zsh zsh-plugins starship
+.PHONY: all deps nvim tmux ghostty kitty aliases zsh zsh-plugins bash blesh starship verify doctor clean help
+
+all: deps nvim tmux ghostty kitty aliases $(SHELL_TARGET) starship
 
 doctor: verify ## Check system health and dependencies
 	@echo "--- Checking Binaries ---"
-	@for bin in nvim tmux kitty starship zoxide fzf fd rg; do \
+	@for bin in nvim tmux ghostty kitty starship zoxide fzf rg; do \
 		if command -v $$bin >/dev/null; then \
 			echo "✓ $$bin is installed"; \
 		else \
 			echo "✗ $$bin is MISSING"; \
 		fi; \
 	done
+	if command -v fd >/dev/null || command -v fdfind >/dev/null; then \
+		echo "✓ fd is installed"; \
+	else \
+		echo "✗ fd is MISSING"; \
+	fi
 	@echo "--- Checking ZSH Plugins ---"
 	@for plugin in zsh-autosuggestions zsh-syntax-highlighting; do \
 		if [ -d "$(HOME)/.oh-my-zsh/custom/plugins/$$plugin" ]; then \
@@ -95,6 +108,9 @@ aliases:
 
 zsh:
 	$(call safe_link,$(DOTFILES_DIR)/.zshrc,$(HOME)/.zshrc)
+
+bash:
+	$(call safe_link,$(DOTFILES_DIR)/.bashrc,$(HOME)/.bashrc)
 
 starship:
 	$(call safe_link,$(DOTFILES_DIR)/starship.toml,$(CONFIG_DIR)/starship.toml)
