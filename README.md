@@ -18,9 +18,10 @@ Development environment configurations for macOS and Linux.
 - **Core Plugins**: `telescope.nvim`, `oil.nvim`, `toggleterm.nvim`
 
 ### Tmux
-- **Prefix**: `C-Space`
+- **Prefix**: `C-b`
 - **Theme**: Catppuccin Mocha
-- **Navigation**: `vim-tmux-navigator` for pane navigation
+- **Navigation**: `vim-tmux-navigator`
+ for pane navigation
 
 ## Installation
 
