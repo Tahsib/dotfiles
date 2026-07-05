@@ -26,3 +26,4 @@ shell-integration = zsh
 copy-on-select = true
 
 keybind = cmd+enter=new_window
+confirm-close-surface = false

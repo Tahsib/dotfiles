@@ -66,3 +66,22 @@ fi
 [ -f "$HOME/.bashrc.local" ] && source "$HOME/.bashrc.local"
 
 : # Final command to ensure exit code 0
+
+export NVM_DIR="$HOME/.nvm"
+# Lazy load NVM to speed up shell startup
+_load_nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+nvm() { _load_nvm; nvm "$@"; }
+node() { _load_nvm; node "$@"; }
+npm() { _load_nvm; npm "$@"; }
+npx() { _load_nvm; npx "$@"; }
+alias kubectl='microk8s kubectl'
+export OLLAMA_API_BASE=http://localhost:11434
+alias coder='aider --no-git --map-tokens 1024'
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/rahul/.local/bin:$PATH"
