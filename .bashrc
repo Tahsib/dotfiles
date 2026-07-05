@@ -78,7 +78,7 @@ nvm() { _load_nvm; nvm "$@"; }
 node() { _load_nvm; node "$@"; }
 npm() { _load_nvm; npm "$@"; }
 npx() { _load_nvm; npx "$@"; }
-alias kubectl='microk8s kubectl'
+# alias kubectl='microk8s kubectl'
 export OLLAMA_API_BASE=http://localhost:11434
 alias coder='aider --no-git --map-tokens 1024'
 
