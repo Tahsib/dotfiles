@@ -11,7 +11,7 @@ jobs:
     name: Lint & Format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install Linting Tools
         run: sudo apt update && sudo apt install -y zsh shellcheck
@@ -36,7 +36,7 @@ jobs:
     name: Installation & Verification
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install Neovim
         uses: rhysd/action-setup-vim@v1
@@ -54,7 +54,7 @@ jobs:
     name: Neovim Health
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install Neovim
         uses: rhysd/action-setup-vim@v1
