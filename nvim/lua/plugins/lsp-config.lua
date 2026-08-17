@@ -1,7 +1,19 @@
 return {
   "neovim/nvim-lspconfig",
+  dependencies = {
+    "b0o/SchemaStore.nvim",
+  },
   config = function()
+    -- Ensure mason-installed language servers are discovered in PATH
+    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+    if vim.fn.isdirectory(mason_bin) == 1 and not string.find(vim.env.PATH, mason_bin, 1, true) then
+      vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+    end
+
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+    local has_schemastore, schemastore = pcall(require, "schemastore")
+    local yaml_schemas = has_schemastore and schemastore.yaml.schemas() or {}
 
     local servers = {
       lua_ls = {},
@@ -22,13 +34,50 @@ return {
       html = {},
       pylsp = {},
       terraformls = {},
-      yamlls = {},
+      yamlls = {
+        settings = {
+          yaml = {
+            schemaStore = {
+              enable = false,
+              url = "",
+            },
+            schemas = vim.tbl_extend("force", yaml_schemas, {
+              ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/all.json"] = {
+                "*.k8s.yaml",
+                "*.k8s.yml",
+                "k8s/**/*.yaml",
+                "k8s/**/*.yml",
+                "manifests/**/*.yaml",
+                "manifests/**/*.yml",
+                "**/*k8s*/**/*.yaml",
+                "**/*k8s*/**/*.yml",
+                "*deployment*.yaml",
+                "*service*.yaml",
+                "*pod*.yaml",
+                "*ingress*.yaml",
+                "*daemonset*.yaml",
+                "*statefulset*.yaml",
+                "*configmap*.yaml",
+                "*secret*.yaml",
+                "*.yaml",
+                "*.yml",
+              },
+              ["http://json.schemastore.org/kustomization"] = "kustomization.yaml",
+              ["http://json.schemastore.org/chart"] = "Chart.yaml",
+            }),
+            validate = true,
+            completion = true,
+            hover = true,
+          },
+        },
+      },
     }
 
     for server, config in pairs(servers) do
       config.capabilities = capabilities
       if vim.lsp.config then
         vim.lsp.config(server, config)
+        vim.lsp.enable(server)
       else
         require("lspconfig")[server].setup(config)
       end
