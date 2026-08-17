@@ -29,9 +29,6 @@ return {
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local has_schemastore, schemastore = pcall(require, "schemastore")
-      local yaml_schemas = has_schemastore and schemastore.yaml.schemas() or {}
-
       local servers = {
         lua_ls = {},
         gopls = {
@@ -58,30 +55,106 @@ return {
                 enable = false,
                 url = "",
               },
-              schemas = vim.tbl_extend("force", yaml_schemas, {
-                kubernetes = {
-                  "*.k8s.yaml",
-                  "*.k8s.yml",
-                  "k8s/**/*.yaml",
-                  "k8s/**/*.yml",
-                  "manifests/**/*.yaml",
-                  "manifests/**/*.yml",
-                  "**/*k8s*/**/*.yaml",
-                  "**/*k8s*/**/*.yml",
-                  "*deployment*.yaml",
-                  "*service*.yaml",
+              schemas = {
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/pod-v1.json"] = {
                   "*pod*.yaml",
-                  "*ingress*.yaml",
-                  "*daemonset*.yaml",
-                  "*statefulset*.yaml",
+                  "*pod*.yml",
+                  "pod.yaml",
+                  "pod.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/deployment-apps-v1.json"] = {
+                  "*deployment*.yaml",
+                  "*deployment*.yml",
+                  "*deploy*.yaml",
+                  "*deploy*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/service-v1.json"] = {
+                  "*service*.yaml",
+                  "*service*.yml",
+                  "*svc*.yaml",
+                  "*svc*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/configmap-v1.json"] = {
                   "*configmap*.yaml",
+                  "*configmap*.yml",
+                  "*cm*.yaml",
+                  "*cm*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/secret-v1.json"] = {
                   "*secret*.yaml",
-                  "*.yaml",
-                  "*.yml",
+                  "*secret*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/ingress-networking-v1.json"] = {
+                  "*ingress*.yaml",
+                  "*ingress*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/daemonset-apps-v1.json"] = {
+                  "*daemonset*.yaml",
+                  "*daemonset*.yml",
+                  "*ds*.yaml",
+                  "*ds*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/statefulset-apps-v1.json"] = {
+                  "*statefulset*.yaml",
+                  "*statefulset*.yml",
+                  "*sts*.yaml",
+                  "*sts*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/job-batch-v1.json"] = {
+                  "*job*.yaml",
+                  "*job*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/cronjob-batch-v1.json"] = {
+                  "*cronjob*.yaml",
+                  "*cronjob*.yml",
+                  "*cj*.yaml",
+                  "*cj*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/namespace-v1.json"] = {
+                  "*namespace*.yaml",
+                  "*namespace*.yml",
+                  "*ns*.yaml",
+                  "*ns*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/persistentvolumeclaim-v1.json"] = {
+                  "*pvc*.yaml",
+                  "*pvc*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/persistentvolume-v1.json"] = {
+                  "*pv*.yaml",
+                  "*pv*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/serviceaccount-v1.json"] = {
+                  "*serviceaccount*.yaml",
+                  "*serviceaccount*.yml",
+                  "*sa*.yaml",
+                  "*sa*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/role-rbac-v1.json"] = {
+                  "*role*.yaml",
+                  "*role*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/rolebinding-rbac-v1.json"] = {
+                  "*rolebinding*.yaml",
+                  "*rolebinding*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/clusterrole-rbac-v1.json"] = {
+                  "*clusterrole*.yaml",
+                  "*clusterrole*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/clusterrolebinding-rbac-v1.json"] = {
+                  "*clusterrolebinding*.yaml",
+                  "*clusterrolebinding*.yml",
+                },
+                ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.0-standalone-strict/networkpolicy-networking-v1.json"] = {
+                  "*networkpolicy*.yaml",
+                  "*networkpolicy*.yml",
+                  "*netpol*.yaml",
+                  "*netpol*.yml",
                 },
                 ["http://json.schemastore.org/kustomization"] = "kustomization.yaml",
                 ["http://json.schemastore.org/chart"] = "Chart.yaml",
-              }),
+              },
               validate = true,
               completion = true,
               hover = true,
