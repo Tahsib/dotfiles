@@ -42,6 +42,17 @@ if command -v starship &> /dev/null; then
   eval "$(starship init bash)"
 fi
 
+# Enable bash-completion
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  elif [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
+    . /opt/homebrew/etc/profile.d/bash_completion.sh
+  fi
+fi
+
 # Completions (Lazy loaded with caching logic mirroring .zshrc)
 if command -v kubectl &> /dev/null; then
   if [ ! -f "$HOME/.kube/completion.bash" ]; then
@@ -50,7 +61,7 @@ if command -v kubectl &> /dev/null; then
   fi
   source "$HOME/.kube/completion.bash"
   alias k=kubectl
-  complete -F __start_kubectl k
+  complete -o default -F __start_kubectl k
 fi
 
 if command -v helm &> /dev/null; then
