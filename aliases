@@ -38,6 +38,8 @@ alias kdel="kubectl delete"
 alias kn="kubectl config set-context --current --namespace"
 alias kctx="kubectl config use-context"
 alias k9s="k9s"
+alias kind-start="docker start \$(docker ps -a -q --filter 'name=kind-3node-cluster')"
+alias kind-stop="docker stop \$(docker ps -q --filter 'name=kind-3node-cluster')"
 
 # Terraform
 alias tf="terraform"
