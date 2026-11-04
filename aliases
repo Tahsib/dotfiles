@@ -83,7 +83,3 @@ else
 fi
 alias ll="ls -lah"
 alias grep="grep --color=auto"
-
-# Paths
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"

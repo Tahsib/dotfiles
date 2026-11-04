@@ -22,7 +22,7 @@ else
     MANAGED_FILES += "$(HOME)/.bashrc"
 endif
 
-.PHONY: all deps nvim tmux ghostty kitty aliases zsh zsh-plugins bash blesh starship verify doctor clean help
+.PHONY: all deps nvim tmux ghostty kitty aliases zsh zsh-plugins bash starship verify doctor clean help
 
 all: deps nvim tmux ghostty kitty aliases $(SHELL_TARGET) starship
 
@@ -35,7 +35,7 @@ doctor: verify ## Check system health and dependencies
 			echo "✗ $$bin is MISSING"; \
 		fi; \
 	done
-	if command -v fd >/dev/null || command -v fdfind >/dev/null; then \
+	@if command -v fd >/dev/null || command -v fdfind >/dev/null; then \
 		echo "✓ fd is installed"; \
 	else \
 		echo "✗ fd is MISSING"; \

@@ -5,6 +5,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # Plugins
 plugins=(git docker kubectl zsh-autosuggestions zsh-syntax-highlighting)
 
+# Add custom completion paths before compinit runs
+fpath=("$HOME/.docker/completions" $fpath)
+
 # Load Oh My Zsh safely and silently
 if [ -f "$ZSH/oh-my-zsh.sh" ]; then
   # Standardize plugin loading - OmZ handles the $plugins array
@@ -17,6 +20,7 @@ else
 fi
 
 # Environment
+typeset -U path PATH
 if [[ "$OSTYPE" == "darwin"* ]]; then
   [ -d "/opt/homebrew/bin" ] && export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 fi
@@ -45,10 +49,6 @@ setopt PUSHD_SILENT
 # Paths
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
-
-# Completions
-fpath=("$HOME/.docker/completions" $fpath)
-autoload -Uz compinit && compinit
 
 # Lazy load completions for heavy tools
 if (( $+commands[kubectl] )); then
@@ -86,3 +86,5 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # Overrides
 [ -f "$HOME/.aliases" ] && source "$HOME/.aliases"
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+: # Final command to ensure exit code 0
