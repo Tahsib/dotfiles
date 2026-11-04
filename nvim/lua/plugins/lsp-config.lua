@@ -9,13 +9,17 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
+        automatic_enable = false,
         ensure_installed = {
+          "docker_compose_language_service",
+          "dockerls",
           "lua_ls",
           "gopls",
-          "golangci_lint_ls",
           "html",
           "pylsp",
+          "rust_analyzer",
           "terraformls",
+          "ts_ls",
           "yamlls",
         },
       })
@@ -24,18 +28,33 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
       "b0o/SchemaStore.nvim",
     },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+      if vim.lsp.config then
+        vim.lsp.config("*", { capabilities = capabilities })
+      end
+
       local servers = {
+        docker_compose_language_service = {
+          filetypes = { "yaml" },
+        },
+        dockerls = {},
         lua_ls = {},
         gopls = {
           cmd = { "gopls" },
-          filetypes = { "go", "gomod", "gowork", "gotmpl" },
-          root_dir = function(fname)
-            return vim.fs.root(fname, { "go.work", "go.mod", ".git" })
+          filetypes = { "go", "gomod", "gowork" },
+          root_dir = function(bufnr, on_dir)
+            local fname = type(bufnr) == "number" and vim.api.nvim_buf_get_name(bufnr) or bufnr
+            local root = vim.fs.root(fname, { "go.work", "go.mod", ".git" }) or vim.fs.dirname(fname)
+            if on_dir then
+              on_dir(root)
+            end
+            return root
           end,
           settings = {
             gopls = {
@@ -44,11 +63,19 @@ return {
             },
           },
         },
-        golangci_lint_ls = {},
         html = {},
         pylsp = {},
-        terraformls = {},
+        rust_analyzer = {},
+        terraformls = {
+          filetypes = { "terraform", "tf" },
+          init_options = {
+            ignoreSingleFileWarning = true,
+          },
+          on_attach = function() end,
+        },
+        ts_ls = {},
         yamlls = {
+          filetypes = { "yaml" },
           settings = {
             yaml = {
               schemaStore = {
@@ -179,8 +206,12 @@ return {
       vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Actions" })
       vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
       vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show Line Diagnostics" })
-      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
-      vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+      vim.keymap.set("n", "[d", function()
+        vim.diagnostic.jump({ count = -1, float = true })
+      end, { desc = "Previous Diagnostic" })
+      vim.keymap.set("n", "]d", function()
+        vim.diagnostic.jump({ count = 1, float = true })
+      end, { desc = "Next Diagnostic" })
     end,
   },
 }
