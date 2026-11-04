@@ -8,16 +8,14 @@ return {
       sources = {
         null_ls.builtins.formatting.stylua,
         null_ls.builtins.formatting.prettier,
-        null_ls.builtins.completion.spell,
         null_ls.builtins.formatting.gofumpt,
         null_ls.builtins.formatting.goimports,
-        null_ls.builtins.formatting.goimports_reviser,
-        null_ls.builtins.formatting.golines,
         null_ls.builtins.diagnostics.golangci_lint,
         null_ls.builtins.formatting.isort,
         null_ls.builtins.formatting.black,
         null_ls.builtins.diagnostics.actionlint,
         null_ls.builtins.diagnostics.ansiblelint,
+        null_ls.builtins.formatting.terraform_fmt,
         null_ls.builtins.diagnostics.terraform_validate,
         null_ls.builtins.diagnostics.yamllint,
       },
@@ -28,7 +26,27 @@ return {
             group = augroup,
             buffer = bufnr,
             callback = function()
-              vim.lsp.buf.format({ bufnr = bufnr })
+              vim.lsp.buf.format({
+                bufnr = bufnr,
+                filter = function(c)
+                  return c.name == "null-ls"
+                end,
+              })
+            end,
+          })
+        end
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("LspAttach", {
+      callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client and client.name == "rust_analyzer" then
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = augroup,
+            buffer = args.buf,
+            callback = function()
+              vim.lsp.buf.format({ bufnr = args.buf })
             end,
           })
         end
